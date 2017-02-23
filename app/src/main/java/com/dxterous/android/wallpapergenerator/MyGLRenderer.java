@@ -2,16 +2,18 @@ package com.dxterous.android.wallpapergenerator;
 
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
-import android.opengl.GLException;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+
+import com.dxterous.android.wallpapergenerator.designs.triangles.RightAngled;
+import com.dxterous.android.wallpapergenerator.designs.triangles.Triangle;
 
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-/**
+/*
  * Created by dudupoo on 22/2/17.
  */
 
@@ -20,22 +22,15 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     private int width, height;
     private Bitmap bitmap;
     private float red=1, blue=1, green=1;
+    private Triangle triangle;
+    private RightAngled square;
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config)
     {
-
+        triangle = new Triangle();
+        square = new RightAngled();
     }
-
-    public void setColor(float red, float blue, float green)
-    {
-        this.red = red;
-        this.blue = blue;
-        this.green = green;
-    }
-
-    public Bitmap getBitmap()
-    {return bitmap;}
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
@@ -50,6 +45,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     {
         gl.glClearColor(red, green, blue, 0.0f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+        //triangle.draw();
+        square.draw();
 
         int b[] = new int[width * (height)];
         int bt[] = new int[width * height];
@@ -76,5 +73,25 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
             Log.d("onSurfaceChanged :: ", "Bitmap is created");
         this.bitmap = sb;
 
+    }//onDrawFrame
+
+    public static int loadShader(int type, String shaderCode)
+    {
+        int shader = GLES20.glCreateShader(type);
+        GLES20.glShaderSource(shader, shaderCode);
+        GLES20.glCompileShader(shader);
+        return shader;
+    }//loadShader
+
+    public void setColor(float red, float blue, float green)
+    {
+        this.red = red;
+        this.blue = blue;
+        this.green = green;
+    }
+
+    public Bitmap getBitmap()
+    {
+        return bitmap;
     }
 }

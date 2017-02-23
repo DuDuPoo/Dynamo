@@ -1,23 +1,19 @@
 package com.dxterous.android.wallpapergenerator;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.opengl.GLSurfaceView;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
-/**
+import java.util.Random;
+
+/*
  * Created by dudupoo on 22/2/17.
  */
 
 public class MyGLSurfaceView extends GLSurfaceView
 {
     MyGLRenderer renderer;
-    float mPreviousX;
-    float mPreviousY;
 
     public MyGLSurfaceView(Context context, AttributeSet attrs)
     {
@@ -36,27 +32,18 @@ public class MyGLSurfaceView extends GLSurfaceView
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        float x = event.getX();
-        float y = event.getY();
-        Log.d("Red Color :: ", ""+x/getWidth());
+        Random random = new Random();
         switch (event.getAction())
         {
             case MotionEvent.ACTION_UP:
             {
-                float dx = x-mPreviousX;
-                float dy = y-mPreviousY;
-                Log.d("ACTION_UP :: ",""+dx/getWidth());
-                renderer.setColor(dx/getWidth(), dy/getHeight(), Color.GREEN);
+                renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
                 requestRender();
                 break;
             }
             case MotionEvent.ACTION_MOVE:
             {
-                float dx = x-mPreviousX;
-                float dy = y-mPreviousY;
-                //Red:0.90 green:0.22 blue:0.21 alpha:1.0
-                Log.d("ACTION_MOVE :: ",""+x/getWidth());
-                renderer.setColor(x/getWidth(), y/getHeight(), Color.GREEN);
+                renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
                 requestRender();
                 break;
             }
