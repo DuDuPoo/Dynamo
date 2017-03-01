@@ -3,12 +3,15 @@ package com.dxterous.android.wallpapergenerator;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
 import android.util.Log;
 
+import com.dxterous.android.wallpapergenerator.designs.squares.Square;
 import com.dxterous.android.wallpapergenerator.designs.triangles.RightAngled;
 import com.dxterous.android.wallpapergenerator.designs.triangles.Triangle;
 
 import java.nio.IntBuffer;
+import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -22,14 +25,39 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     private int width, height;
     private Bitmap bitmap;
     private float red=1, blue=1, green=1;
-    private Triangle triangle;
-    private RightAngled square;
+    private Triangle triangle, triangle2, triangle3;
+
+    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
+    private final float[] mMVPMatrix = new float[16];
+    private final float[] mProjectionMatrix = new float[16];
+    private final float[] mViewMatrix = new float[16];
+    private final float[] mRotationMatrix = new float[16];
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config)
     {
-        triangle = new Triangle();
-        square = new RightAngled();
+        Random random = new Random();
+        float triangleCoords[] =
+                {
+                        0.0f, 0.0f, 0.0f,
+                        -1.0f, -1.0f, 0.0f,
+                        0.8f, -1.0f, 0.0f
+                };
+        float triangleCoords2[] =
+                {
+                        0.3f, 0.15f, 0.0f,
+                        -1.0f, -1.0f, 0.0f,
+                        1.1f, -1.0f, 0.0f
+                };
+        float triangleCoords3[] =
+                {
+                        0.7f, -0.2f, 0.0f,
+                        -1.0f, -1.0f, 0.0f,
+                        1.4f, -1.0f, 0.0f
+                };
+        triangle = new Triangle(triangleCoords);
+        triangle2 = new Triangle(triangleCoords2);
+        triangle3 = new Triangle(triangleCoords3);
     }
 
     @Override
@@ -38,6 +66,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         GLES20.glViewport(0, 0, width, height);
         this.width = width;
         this.height = height;
+        float ratio = (float) width / height;
+
+        // this projection matrix is applied to object coordinates
+        // in the onDrawFrame() method
+//        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+
     }
 
     @Override
@@ -45,8 +79,12 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     {
         gl.glClearColor(red, green, blue, 0.0f);
         gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-        //triangle.draw();
-        square.draw();
+        triangle3.draw();
+        triangle2.draw();
+        triangle.draw();
+//        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+//        square.draw(mMVPMatrix);
 
         int b[] = new int[width * (height)];
         int bt[] = new int[width * height];
@@ -94,4 +132,13 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     {
         return bitmap;
     }
+
+    public static void checkGlError(String glOperation) {
+        int error;
+        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+            Log.e("", glOperation + ": glError " + error);
+            throw new RuntimeException(glOperation + ": glError " + error);
+        }
+    }
+
 }

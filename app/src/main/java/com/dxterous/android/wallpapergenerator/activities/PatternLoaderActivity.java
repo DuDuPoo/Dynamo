@@ -1,40 +1,36 @@
-package com.dxterous.android.wallpapergenerator;
+package com.dxterous.android.wallpapergenerator.activities;
 
-import android.app.ProgressDialog;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.Image;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+import com.dxterous.android.wallpapergenerator.MyGLSurfaceView;
+import com.dxterous.android.wallpapergenerator.R;
+
+public class PatternLoaderActivity extends AppCompatActivity implements View.OnClickListener
 {
     MyGLSurfaceView glSurfaceView;
-    Button setWallpaper;
+    FloatingActionButton setWallpaperButton;
     Bitmap bitmap;
-    ImageView imageView;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_pattern_loader);
+        initUI();
+    }
+
+    private void initUI()
+    {
         glSurfaceView = (MyGLSurfaceView) findViewById(R.id.glSurfaceView);
-        setWallpaper = (Button) findViewById(R.id.setWallpaperButton);
-        imageView = (ImageView) findViewById(R.id.imageView);
-        setWallpaper.setOnClickListener(this);
+        setWallpaperButton = (FloatingActionButton) findViewById(R.id.setWallpaperButton);
+        setWallpaperButton.setOnClickListener(this);
     }
 
     @Override
@@ -43,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v.getId() == R.id.setWallpaperButton)
         {
             bitmap = glSurfaceView.renderer.getBitmap();
-            imageView.setImageBitmap(bitmap);
             Log.d("LoadWallpaperTask :: ", "setting wallpaper");
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
             try
@@ -58,5 +53,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             Log.d("LoadWallpaperTask :: ", "Wallpaper Set");
         }
-    }//onClick
+    }
 }

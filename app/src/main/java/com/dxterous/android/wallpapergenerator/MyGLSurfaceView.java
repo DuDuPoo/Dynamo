@@ -3,6 +3,7 @@ package com.dxterous.android.wallpapergenerator;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.Random;
@@ -13,7 +14,7 @@ import java.util.Random;
 
 public class MyGLSurfaceView extends GLSurfaceView
 {
-    MyGLRenderer renderer;
+    public MyGLRenderer renderer;
 
     public MyGLSurfaceView(Context context, AttributeSet attrs)
     {
@@ -39,12 +40,7 @@ public class MyGLSurfaceView extends GLSurfaceView
             {
                 renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
                 requestRender();
-                break;
-            }
-            case MotionEvent.ACTION_MOVE:
-            {
-                renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
-                requestRender();
+                Log.e("MyGLSurfaceView", "onTouchEvent: ACTION_UP");
                 break;
             }
         }
