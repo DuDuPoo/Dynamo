@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Dynamo.iml" filepath="$PROJECT_DIR$/Dynamo.iml" group="Dynamo" />
       <module fileurl="file://$PROJECT_DIR$/app/Dynamo-app.iml" filepath="$PROJECT_DIR$/app/Dynamo-app.iml" group="Dynamo/app" />
+      <module fileurl="file://$PROJECT_DIR$/StudioProjects-Dynamo.iml" filepath="$PROJECT_DIR$/StudioProjects-Dynamo.iml" group="Dynamo" />
+      <module fileurl="file://$PROJECT_DIR$/app/StudioProjects-Dynamo-app.iml" filepath="$PROJECT_DIR$/app/StudioProjects-Dynamo-app.iml" group="Dynamo/app" />
       <module fileurl="file://$PROJECT_DIR$/WallpaperGenerator.iml" filepath="$PROJECT_DIR$/WallpaperGenerator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
