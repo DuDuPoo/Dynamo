@@ -1,18 +1,12 @@
-package com.dxterous.android.wallpapergenerator.designs.triangles;
+package com.dxterous.android.wallpapergenerator.designs;
 
 import android.opengl.GLES20;
 import android.util.Log;
-
 import com.dxterous.android.wallpapergenerator.MyGLRenderer;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Random;
-
-/*
- * Created by dudupoo on 23/2/17.
- */
 
 public class Triangle
 {
@@ -31,47 +25,26 @@ public class Triangle
             "    gl_FragColor = vColor;"+
             "}";
 
-    static final int COORDS_PER_VERTEX = 3;
+    private static final int COORDS_PER_VERTEX = 3;
     private final int program;
-    /*static float triangleCoords[] =
-            {
-              0.0f, 0.622008459f, 0.0f,
-              -0.5f, -0.311004243f, 0.0f,
-              0.5f, -0.311004243f, 0.0f
-            };*/
-    float triangleCoords[] =
-            {
-                    0.0f, 2.0f, 0.0f,
-                    -1.0f, -1.0f, 0.0f,
-                    1.0f, -1.0f, 0.0f
-            };
 
-    //Red:0.96 green:0.00 blue:0.34
-    float red, green, blue, alpha;
-
-    private int positionHandle, colorHandle;
-    private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
-    private final int vertexStride = COORDS_PER_VERTEX *4; //4 bytes per row
+    private int vertexCount;
+    private int vertexStride;
 
     public Triangle(float[] triangleCoords)
     {
-        this.triangleCoords = triangleCoords;
-       //allocateDirect(Number of coordinate values * 4 bytes per float)
-        ByteBuffer bb = ByteBuffer.allocateDirect(triangleCoords.length * 4);
-        //Use the device hardware's native byte order
-        bb.order(ByteOrder.nativeOrder());
-        //create a floating point buffer from ByteBuffer
-        vertexBuffer = bb.asFloatBuffer();
-        //add the triangle coords to floatbuffer
-        vertexBuffer.put(triangleCoords);
-        vertexBuffer.position(0);
+        this.vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
+        this.vertexStride = COORDS_PER_VERTEX *4; //4 bytes per row
 
+        ByteBuffer bb = ByteBuffer.allocateDirect(triangleCoords.length * 4);  //allocateDirect(Number of coordinate values * 4 bytes per float)
+        bb.order(ByteOrder.nativeOrder());  //Use the device hardware's native byte order
+        vertexBuffer = bb.asFloatBuffer(); //create a floating point buffer from ByteBuffer
+        vertexBuffer.put(triangleCoords); //add the triangle coords to floatbuffer
+        vertexBuffer.position(0);
         int vertexShader = MyGLRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = MyGLRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
-
         program = GLES20.glCreateProgram();
-        //add the vertexShader to program
-        GLES20.glAttachShader(program, vertexShader);
+        GLES20.glAttachShader(program, vertexShader); //add the vertexShader to program
         GLES20.glAttachShader(program, fragmentShader);
         GLES20.glLinkProgram(program);
     }//Constructor
@@ -79,18 +52,18 @@ public class Triangle
     public void draw()
     {
         Random random = new Random();
-        red = random.nextFloat();
-        blue = random.nextFloat();
-        green = random.nextFloat();
-        alpha = 1.0f;
+        float red = random.nextFloat();
+        float blue = random.nextFloat();
+        float green = random.nextFloat();
+        float alpha = 1.0f;
 
         GLES20.glUseProgram(program);
-        positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
+        int positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
         GLES20.glEnableVertexAttribArray(positionHandle);
         GLES20.glVertexAttribPointer(positionHandle,  COORDS_PER_VERTEX,  GLES20.GL_FLOAT
         , false, vertexStride, vertexBuffer);
 
-        colorHandle = GLES20.glGetUniformLocation(program, "vColor");
+        int colorHandle = GLES20.glGetUniformLocation(program, "vColor");
         GLES20.glUniform4fv(colorHandle, 1, new float[]{red, green, blue, alpha}, 0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0 , vertexCount);
         GLES20.glDisableVertexAttribArray(positionHandle);
