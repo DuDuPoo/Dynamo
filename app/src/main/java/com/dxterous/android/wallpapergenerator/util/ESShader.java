@@ -35,7 +35,7 @@
 //    Utility functions for loading GLSL ES 3.0 shaders and creating program objects.
 //
 
-package com.openglesbook.common;
+package com.dxterous.android.wallpapergenerator.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

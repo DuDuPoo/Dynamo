@@ -99,12 +99,6 @@ public class Cube {
             -size, -size, -size // top-left
     };
 
-/*    float colorcyan[] = myColor.cyan();
-    float colorblue[] = myColor.blue();
-    float colorred[] = myColor.red();
-    float colorgray[] = myColor.gray();
-    float colorgreen[] = myColor.green();
-    float coloryellow[] = myColor.yellow();*/
 
     //vertex shader code
     String vShaderStr =

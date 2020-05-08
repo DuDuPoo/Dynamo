@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
+import com.dxterous.android.wallpapergenerator.util.ESShader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -52,7 +54,7 @@ public class CubeTx {
                 .order ( ByteOrder.nativeOrder() ).asShortBuffer();
         indices.put ( indicesData ).position ( 0 );
         // Load shaders from 'assets' and get a linked program object
-        programObject = com.openglesbook.common.ESShader.loadProgramFromAsset ( context,
+        programObject = ESShader.loadProgramFromAsset ( context,
                 "shaders/vertexShader.vert",
                 "shaders/fragmentShader.frag" );
 

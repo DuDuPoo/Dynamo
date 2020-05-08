@@ -35,7 +35,7 @@
 //    Utility class for handling transformations
 //
 
-package com.openglesbook.common;
+package com.dxterous.android.wallpapergenerator.util;
 
 import java.lang.Math;
 import java.nio.ByteBuffer;
