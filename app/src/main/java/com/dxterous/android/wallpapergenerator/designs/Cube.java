@@ -11,26 +11,23 @@ package com.dxterous.android.wallpapergenerator.designs;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Random;
 
-import android.graphics.Color;
 import android.opengl.GLES30;
 import android.util.Log;
 
-import com.dxterous.android.wallpapergenerator.MyColor;
 import com.dxterous.android.wallpapergenerator.MyGLRenderer;
 
 public class Cube {
-    private int mProgramObject;
+    private int programObject;
     private int mMVPMatrixHandle;
     private int mColorHandle;
-    private FloatBuffer mVertices;
+    private FloatBuffer vertices;
 
     //initial size of the cube.  set here, so it is easier to change later.
     float size = 0.4f;
 
     //this is the initial data, which will need to translated into the mVertices variable in the consturctor.
-    float[] mVerticesData = new float[]
+    float[] verticesData = new float[]
             {
             ////////////////////////////////////////////////////////////////////
             // FRONT
@@ -137,12 +134,12 @@ public class Cube {
     public Cube() {
 
         //first setup the mVertices correctly.
-        mVertices = ByteBuffer
-                .allocateDirect(mVerticesData.length * 4)
+        vertices = ByteBuffer
+                .allocateDirect(verticesData.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer()
-                .put(mVerticesData);
-        mVertices.position(0);
+                .put(verticesData);
+        vertices.position(0);
 
         //setup the shaders
         int vertexShader;
@@ -182,7 +179,7 @@ public class Cube {
         }
 
         // Store the program object
-        mProgramObject = programObject;
+        this.programObject = programObject;
 
         //now everything is setup and ready to draw.
     }
@@ -190,14 +187,14 @@ public class Cube {
     public void draw(float[] mvpMatrix) {
 
         // Use the program object
-        GLES30.glUseProgram(mProgramObject);
+        GLES30.glUseProgram(programObject);
 
         // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES30.glGetUniformLocation(mProgramObject, "uMVPMatrix");
+        mMVPMatrixHandle = GLES30.glGetUniformLocation(programObject, "uMVPMatrix");
         MyGLRenderer.checkGlError("glGetUniformLocation");
 
         // get handle to fragment shader's vColor member
-        mColorHandle = GLES30.glGetUniformLocation(mProgramObject, "vColor");
+        mColorHandle = GLES30.glGetUniformLocation(programObject, "vColor");
 
 
         // Apply the projection and view transformation
@@ -205,12 +202,12 @@ public class Cube {
         MyGLRenderer.checkGlError("glUniformMatrix4fv");
 
         int VERTEX_POS_INDX = 0;
-        mVertices.position(VERTEX_POS_INDX);  //just in case.  We did it already though.
+        vertices.position(VERTEX_POS_INDX);  //just in case.  We did it already though.
 
         //add all the points to the space, so they can be correct by the transformations.
         //would need to do this even if there were no transformations actually.
         GLES30.glVertexAttribPointer(VERTEX_POS_INDX, 3, GLES30.GL_FLOAT,
-                false, 0, mVertices);
+                false, 0, vertices);
         GLES30.glEnableVertexAttribArray(VERTEX_POS_INDX);
 
         //Now we are ready to draw the cube finally.
@@ -218,32 +215,32 @@ public class Cube {
         int verticesPerface = 6;
 
         //draw front face
-        GLES30.glUniform4fv(mColorHandle, 1, MyColor.blue(), 0);
+        GLES30.glUniform4fv(mColorHandle, 1, MyColor.getRandomColor(), 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
         startPos += verticesPerface;
 
         //draw back face
-        GLES30.glUniform4fv(mColorHandle, 1, MyColor.red(), 0);
+        GLES30.glUniform4fv(mColorHandle, 1, MyColor.getRandomColor(), 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, startPos, verticesPerface);
         startPos += verticesPerface;
 
         //draw left face
-        GLES30.glUniform4fv(mColorHandle, 1, MyColor.cyan(), 0);
+        GLES30.glUniform4fv(mColorHandle, 1, MyColor.getRandomColor(), 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
         startPos += verticesPerface;
 
         //draw right face
-        GLES30.glUniform4fv(mColorHandle, 1, MyColor.blue(), 0);
+        GLES30.glUniform4fv(mColorHandle, 1, MyColor.getRandomColor(), 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
         startPos += verticesPerface;
 
         //draw top face
-        GLES30.glUniform4fv(mColorHandle, 1, MyColor.gray(), 0);
+        GLES30.glUniform4fv(mColorHandle, 1, MyColor.getRandomColor(), 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
         startPos += verticesPerface;
 
         //draw bottom face
-        GLES30.glUniform4fv(mColorHandle, 1, MyColor.green(), 0);
+        GLES30.glUniform4fv(mColorHandle, 1, MyColor.getRandomColor(), 0);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES,startPos,verticesPerface);
         //last face, so no need to increment.
 

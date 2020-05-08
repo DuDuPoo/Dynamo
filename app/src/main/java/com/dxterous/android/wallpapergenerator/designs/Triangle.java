@@ -51,11 +51,6 @@ public class Triangle
 
     public void draw()
     {
-        Random random = new Random();
-        float red = random.nextFloat();
-        float blue = random.nextFloat();
-        float green = random.nextFloat();
-        float alpha = 1.0f;
 
         GLES20.glUseProgram(program);
         int positionHandle = GLES20.glGetAttribLocation(program, "vPosition");
@@ -64,7 +59,7 @@ public class Triangle
         , false, vertexStride, vertexBuffer);
 
         int colorHandle = GLES20.glGetUniformLocation(program, "vColor");
-        GLES20.glUniform4fv(colorHandle, 1, new float[]{red, green, blue, alpha}, 0);
+        GLES20.glUniform4fv(colorHandle, 1, MyColor.getRandomColor(), 0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0 , vertexCount);
         GLES20.glDisableVertexAttribArray(positionHandle);
     }//draw()

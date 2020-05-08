@@ -1,4 +1,4 @@
-package com.dxterous.android.wallpapergenerator;
+package com.dxterous.android.wallpapergenerator.designs;
 
 import android.graphics.Color;
 

@@ -17,6 +17,7 @@ public class PatternLoaderActivity extends AppCompatActivity implements View.OnC
 {
     MyGLSurfaceView glSurfaceView;
     FloatingActionButton setWallpaperButton;
+    FloatingActionButton changeDesignButton;
     Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,27 +32,35 @@ public class PatternLoaderActivity extends AppCompatActivity implements View.OnC
         glSurfaceView = (MyGLSurfaceView) findViewById(R.id.glSurfaceView);
         setWallpaperButton = (FloatingActionButton) findViewById(R.id.setWallpaperButton);
         setWallpaperButton.setOnClickListener(this);
+        changeDesignButton = (FloatingActionButton) findViewById(R.id.changeDesignButton);
+        changeDesignButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v)
     {
-        if(v.getId() == R.id.setWallpaperButton)
-        {
-            bitmap = glSurfaceView.renderer.getBitmap();
-            Log.d("LoadWallpaperTask :: ", "setting wallpaper");
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
-            try
-            {
-                wallpaperManager.setWallpaperOffsetSteps(1, 1);
-                wallpaperManager.setBitmap(bitmap);
+        switch(v.getId()) {
+            case R.id.setWallpaperButton: {
+                bitmap = glSurfaceView.renderer.getBitmap();
+                Log.d("LoadWallpaperTask :: ", "setting wallpaper");
+                WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
+                try
+                {
+                    wallpaperManager.setWallpaperOffsetSteps(1, 1);
+                    wallpaperManager.setBitmap(bitmap);
 
-            } catch (Exception e)
-            {
-                Log.d("LoadWallpaperTask :: ", "Wallpaper Fail to set");
-                e.printStackTrace();
+                } catch (Exception e)
+                {
+                    Log.d("LoadWallpaperTask :: ", "Wallpaper Fail to set");
+                    e.printStackTrace();
+                }
+                Log.d("LoadWallpaperTask :: ", "Wallpaper Set");
             }
-            Log.d("LoadWallpaperTask :: ", "Wallpaper Set");
+            break;
+            case R.id.changeDesignButton: {
+                this.glSurfaceView.renderer.changeDesign_id();
+                this.glSurfaceView.requestRender();
+            }
         }
     }
 }

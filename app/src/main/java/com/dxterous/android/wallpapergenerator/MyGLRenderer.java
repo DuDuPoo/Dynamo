@@ -1,5 +1,6 @@
 package com.dxterous.android.wallpapergenerator;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -7,6 +8,7 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import com.dxterous.android.wallpapergenerator.designs.Cube;
+import com.dxterous.android.wallpapergenerator.designs.CubeTx;
 import com.dxterous.android.wallpapergenerator.designs.Triangle;
 
 import java.nio.IntBuffer;
@@ -21,43 +23,30 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     private int width, height;
     private Bitmap bitmap;
     private float red=1, blue=1, green=1;
-    private Triangle triangle;
-    private Cube cube;
-    private boolean is2D;
+    private static int design_id;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
-    private float mAngle =240;
+    private float mAngle =0;
     private float mTransY=0;
     private float mTransX=0;
     private static final float Z_NEAR = 1f;
     private static final float Z_FAR = 40f;
+    private Context context;
 
-    public MyGLRenderer(boolean is2D) {
-        this.is2D = is2D;
+    MyGLRenderer(int design_id, Context context) {
+        MyGLRenderer.design_id = design_id;
+        this.mAngle = 270;
+        this.context = context;
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config)
     {
-        if(is2D) {
-            float[] triangleCoords =
-                    {
-                            0.0f, 0.0f, 0.0f,
-                            -1.0f, -1.0f, 0.0f,
-                            0.8f, -1.0f, 0.0f,
-                            0.0f, 0.622008459f, 0.0f,
-                            -0.5f, -0.311004243f, 0.0f,
-                            0.5f, -0.311004243f, 0.0f
-                    };
-            triangle = new Triangle(triangleCoords);
-        } else {
-            GLES20.glClearColor(0.9f, .9f, 0.9f, 0.9f);
-            cube = new Cube();
-        }
+
     }
 
     @Override
@@ -67,10 +56,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         this.height = height;
         GLES20.glViewport(0, 0, width, height);
         float aspect = (float) width / height;
-        if(is2D) {
-
-
-        } else {
+        if (design_id == 1) {
             // this projection matrix is applied to object coordinates
             //no idea why 53.13f, it was used in another example and it worked.
             Matrix.perspectiveM(mProjectionMatrix, 0, 53.13f, aspect, Z_NEAR, Z_FAR);
@@ -80,39 +66,63 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     @Override
     public void onDrawFrame(GL10 unused)
     {
-        if(is2D) {
-            GLES20.glClearColor(red, green, blue, 0.0f);
-            GLES20.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-            triangle.draw();
-        } else {
-            // Clear the color buffer  set above by glClearColor.
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-            //need this otherwise, it will over right stuff and the cube will look wrong!
-            GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-            // Set the camera position (View matrix)  note Matrix is an include, not a declared method.
-            Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-
-            // Create a rotation and translation for the cube
-            Matrix.setIdentityM(mRotationMatrix, 0);
-
-            //move the cube up/down and left/right
-            Matrix.translateM(mRotationMatrix, 0, mTransX, mTransY, 0);
-
-            //mangle is how fast, x,y,z which directions it rotates.
-            Matrix.rotateM(mRotationMatrix, 0, mAngle, 1.0f, 1.0f, 1.0f);
-
-            // combine the model with the view matrix
-            Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mRotationMatrix, 0);
-
-            // combine the model-view with the projection matrix
-            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-
-            cube.draw(mMVPMatrix);
-
-
+        switch (design_id) {
+            case 0: {
+                float[] triangleCoords =
+                        {
+                                0.0f, 0.0f, 0.0f,
+                                -1.0f, -1.0f, 0.0f,
+                                0.8f, -1.0f, 0.0f,
+                                0.0f, 0.622008459f, 0.0f,
+                                -0.5f, -0.311004243f, 0.0f,
+                                0.5f, -0.311004243f, 0.0f
+                        };
+                Triangle triangle = new Triangle(triangleCoords);
+                GLES20.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
+                GLES20.glClearColor(red, green, blue, 0.0f);
+                triangle.draw();
+                break;
+            }
+            case 1: {
+                Cube cube = new Cube();
+                drawCubeHelper();
+                cube.draw(mMVPMatrix);
+                break;
+            }
+            case 2: {
+                CubeTx cubeTx = new CubeTx(context);
+                drawCubeHelper();
+                cubeTx.draw();
+                break;
+            }
         }
         setBitmap();
     }//onDrawFrame
+
+    private void drawCubeHelper() {
+        // Clear the color buffer  set above by glClearColor.
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES20.glClearColor(red, green, blue, 0.0f);
+        //need this otherwise, it will over right stuff and the cube will look wrong!
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        // Set the camera position (View matrix)  note Matrix is an include, not a declared method.
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, .4f, 0f, 0f, 1.0f, 0.0f);
+
+        // Create a rotation and translation for the cube
+        Matrix.setIdentityM(mRotationMatrix, 0);
+
+        //move the cube up/down and left/right
+        Matrix.translateM(mRotationMatrix, 0, mTransX, mTransY, 0);
+
+        //mangle is how fast, x,y,z which directions it rotates.
+        Matrix.rotateM(mRotationMatrix, 0, mAngle, 1.0f, 1.0f, 1.0f);
+
+        // combine the model with the view matrix
+        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mRotationMatrix, 0);
+
+        // combine the model-view with the projection matrix
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
+    }
 
     private void setBitmap() {
         int[] b = new int[this.width * (this.height)];
@@ -166,6 +176,14 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
         this.blue = blue;
         this.green = green;
     }
+
+    public void changeDesign_id() {
+        design_id++;
+        if (design_id > 2) {
+            design_id = 0;
+        }
+    }
+
 
     public Bitmap getBitmap()
     {

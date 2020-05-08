@@ -15,9 +15,9 @@ import java.util.Random;
 public class MyGLSurfaceView extends GLSurfaceView
 {
     public MyGLRenderer renderer;
-    private float mPreviousX;
-    private float mPreviousY;
-    private static final float TOUCH_SCALE_FACTOR = 0.015f;
+//    private float mPreviousX;
+//    private float mPreviousY;
+//    private static final float TOUCH_SCALE_FACTOR = 0.015f;
 
     public MyGLSurfaceView(Context context, AttributeSet attrs)
     {
@@ -28,28 +28,23 @@ public class MyGLSurfaceView extends GLSurfaceView
     private void init(Context context)
     {
         this.setEGLContextClientVersion(2);
-        renderer = new MyGLRenderer(false);
+        renderer = new MyGLRenderer(1, getContext());
         this.setRenderer(renderer);
-        this.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        this.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
         Random random = new Random();
-        float x = event.getX();
-        float y = event.getY();
-        switch (event.getAction())
-        {
-            /*case MotionEvent.ACTION_UP:
-            {
-                renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
-                requestRender();
-                Log.e("MyGLSurfaceView", "onTouchEvent: ACTION_UP");
-                break;
-            }*/
+//        float x = event.getX();
+//        float y = event.getY();
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
+            requestRender();
+            Log.e("MyGLSurfaceView", "onTouchEvent: ACTION_UP");
 
-            case MotionEvent.ACTION_MOVE: {
+            /*case MotionEvent.ACTION_MOVE: {
                 float dx = x - mPreviousX;
                 //subtract, so the cube moves the same direction as your finger.
                 //with plus it moves the opposite direction.
@@ -59,10 +54,11 @@ public class MyGLSurfaceView extends GLSurfaceView
                 renderer.setY(renderer.getY() - (dy * TOUCH_SCALE_FACTOR));
                 renderer.changeAngle();
                 renderer.setColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
-            }
+                requestRender();
+            }*/
         }
-        mPreviousX = x;
-        mPreviousY = y;
+//        mPreviousX = x;
+//        mPreviousY = y;
         return true;
 
     }
