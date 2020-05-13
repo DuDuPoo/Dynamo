@@ -47,6 +47,7 @@ public class CubeTx {
 
     public CubeTx(Context context){
         this.context = context;
+
         vertices = ByteBuffer.allocateDirect ( verticesData.length * 4 )
                 .order ( ByteOrder.nativeOrder() ).asFloatBuffer();
         vertices.put ( verticesData ).position ( 0 );
@@ -55,8 +56,8 @@ public class CubeTx {
         indices.put ( indicesData ).position ( 0 );
         // Load shaders from 'assets' and get a linked program object
         programObject = ESShader.loadProgramFromAsset ( context,
-                "shaders/vertexShader.vert",
-                "shaders/fragmentShader.frag" );
+                "shaders/vertexShaderCubeTx.vert",
+                "shaders/fragmentShaderCubeTx.frag");
 
         // Get the sampler locations
         mBaseMapLoc = GLES20.glGetUniformLocation ( programObject, "s_baseMap" );
@@ -96,11 +97,11 @@ public class CubeTx {
         GLES20.glUniform1i ( mBaseMapLoc, 0 );
 
         // Bind the light map
-        GLES20.glActiveTexture ( GLES20.GL_TEXTURE1 );
-        GLES20.glBindTexture ( GLES20.GL_TEXTURE_2D, mLightMapTexId );
-
-        // Set the light map sampler to texture unit 1
-        GLES20.glUniform1i ( mLightMapLoc, 1 );
+//        GLES20.glActiveTexture ( GLES20.GL_TEXTURE1 );
+//        GLES20.glBindTexture ( GLES20.GL_TEXTURE_2D, mLightMapTexId );
+//
+//        // Set the light map sampler to texture unit 1
+//        GLES20.glUniform1i ( mLightMapLoc, 1 );
 
         GLES20.glDrawElements ( GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT, indices );
     }

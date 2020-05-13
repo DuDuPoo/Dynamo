@@ -22,82 +22,12 @@ public class Cube {
     private int mMVPMatrixHandle;
     private int mColorHandle;
     private FloatBuffer vertices;
-
+    private float[] verticesData;
     //initial size of the cube.  set here, so it is easier to change later.
-    float size = 0.4f;
+    private float size;
 
     //this is the initial data, which will need to translated into the mVertices variable in the consturctor.
-    float[] verticesData = new float[]
-            {
-            ////////////////////////////////////////////////////////////////////
-            // FRONT
-            ////////////////////////////////////////////////////////////////////
-            // Triangle 1
-            -size, size, size, // top-left
-            -size, -size, size, // bottom-left
-            size, -size, size, // bottom-right
-            // Triangle 2
-            size, -size, size, // bottom-right
-            size, size, size, // top-right
-            -size, size, size, // top-left
-            ////////////////////////////////////////////////////////////////////
-            // BACK
-            ////////////////////////////////////////////////////////////////////
-            // Triangle 1
-            -size, size, -size, // top-left
-            -size, -size, -size, // bottom-left
-            size, -size, -size, // bottom-right
-            // Triangle 2
-            size, -size, -size, // bottom-right
-            size, size, -size, // top-right
-            -size, size, -size, // top-left
 
-            ////////////////////////////////////////////////////////////////////
-            // LEFT
-            ////////////////////////////////////////////////////////////////////
-            // Triangle 1
-            -size, size, -size, // top-left
-            -size, -size, -size, // bottom-left
-            -size, -size, size, // bottom-right
-            // Triangle 2
-            -size, -size, size, // bottom-right
-            -size, size, size, // top-right
-            -size, size, -size, // top-left
-            ////////////////////////////////////////////////////////////////////
-            // RIGHT
-            ////////////////////////////////////////////////////////////////////
-            // Triangle 1
-            size, size, -size, // top-left
-            size, -size, -size, // bottom-left
-            size, -size, size, // bottom-right
-            // Triangle 2
-            size, -size, size, // bottom-right
-            size, size, size, // top-right
-            size, size, -size, // top-left
-
-            ////////////////////////////////////////////////////////////////////
-            // TOP
-            ////////////////////////////////////////////////////////////////////
-            // Triangle 1
-            -size, size, -size, // top-left
-            -size, size, size, // bottom-left
-            size, size, size, // bottom-right
-            // Triangle 2
-            size, size, size, // bottom-right
-            size, size, -size, // top-right
-            -size, size, -size, // top-left
-            ////////////////////////////////////////////////////////////////////
-            // BOTTOM
-            ////////////////////////////////////////////////////////////////////
-            // Triangle 1
-            -size, -size, -size, // top-left
-            -size, -size, size, // bottom-left
-            size, -size, size, // bottom-right
-            // Triangle 2
-            size, -size, size, // bottom-right
-            size, -size, -size, // top-right
-            -size, -size, -size // top-left
-    };
 
 
     //vertex shader code
@@ -125,8 +55,9 @@ public class Cube {
 
     //finally some methods
     //constructor
-    public Cube() {
-
+    public Cube(float size) {
+        this.size = size;
+        setVerticesData(this.size);
         //first setup the mVertices correctly.
         vertices = ByteBuffer
                 .allocateDirect(verticesData.length * 4)
@@ -176,6 +107,80 @@ public class Cube {
         this.programObject = programObject;
 
         //now everything is setup and ready to draw.
+    }
+
+    private void setVerticesData(float size) {
+        verticesData = new float[]
+                {
+                        ////////////////////////////////////////////////////////////////////
+                        // FRONT
+                        ////////////////////////////////////////////////////////////////////
+                        // Triangle 1
+                        -size, size, size, // top-left
+                        -size, -size, size, // bottom-left
+                        size, -size, size, // bottom-right
+                        // Triangle 2
+                        size, -size, size, // bottom-right
+                        size, size, size, // top-right
+                        -size, size, size, // top-left
+                        ////////////////////////////////////////////////////////////////////
+                        // BACK
+                        ////////////////////////////////////////////////////////////////////
+                        // Triangle 1
+                        -size, size, -size, // top-left
+                        -size, -size, -size, // bottom-left
+                        size, -size, -size, // bottom-right
+                        // Triangle 2
+                        size, -size, -size, // bottom-right
+                        size, size, -size, // top-right
+                        -size, size, -size, // top-left
+
+                        ////////////////////////////////////////////////////////////////////
+                        // LEFT
+                        ////////////////////////////////////////////////////////////////////
+                        // Triangle 1
+                        -size, size, -size, // top-left
+                        -size, -size, -size, // bottom-left
+                        -size, -size, size, // bottom-right
+                        // Triangle 2
+                        -size, -size, size, // bottom-right
+                        -size, size, size, // top-right
+                        -size, size, -size, // top-left
+                        ////////////////////////////////////////////////////////////////////
+                        // RIGHT
+                        ////////////////////////////////////////////////////////////////////
+                        // Triangle 1
+                        size, size, -size, // top-left
+                        size, -size, -size, // bottom-left
+                        size, -size, size, // bottom-right
+                        // Triangle 2
+                        size, -size, size, // bottom-right
+                        size, size, size, // top-right
+                        size, size, -size, // top-left
+
+                        ////////////////////////////////////////////////////////////////////
+                        // TOP
+                        ////////////////////////////////////////////////////////////////////
+                        // Triangle 1
+                        -size, size, -size, // top-left
+                        -size, size, size, // bottom-left
+                        size, size, size, // bottom-right
+                        // Triangle 2
+                        size, size, size, // bottom-right
+                        size, size, -size, // top-right
+                        -size, size, -size, // top-left
+                        ////////////////////////////////////////////////////////////////////
+                        // BOTTOM
+                        ////////////////////////////////////////////////////////////////////
+                        // Triangle 1
+                        -size, -size, -size, // top-left
+                        -size, -size, size, // bottom-left
+                        size, -size, size, // bottom-right
+                        // Triangle 2
+                        size, -size, size, // bottom-right
+                        size, -size, -size, // top-right
+                        -size, -size, -size // top-left
+                };
     }
 
     public void draw(float[] mvpMatrix) {

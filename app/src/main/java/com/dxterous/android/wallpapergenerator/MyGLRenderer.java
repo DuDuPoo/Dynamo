@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.dxterous.android.wallpapergenerator.designs.Cube;
 import com.dxterous.android.wallpapergenerator.designs.CubeTx;
+import com.dxterous.android.wallpapergenerator.designs.Particle;
 import com.dxterous.android.wallpapergenerator.designs.Triangle;
 
 import java.nio.IntBuffer;
@@ -24,6 +25,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
     private Bitmap bitmap;
     private float red=1, blue=1, green=1;
     private static int design_id;
+//    private final static int TOTAL_DESIGNS = 3;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
@@ -84,22 +86,31 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
                 break;
             }
             case 1: {
-                Cube cube = new Cube();
-                drawCubeHelper();
+                Cube cube = new Cube(0.5f);
+                draw3DHelper();
                 cube.draw(mMVPMatrix);
                 break;
             }
             case 2: {
                 CubeTx cubeTx = new CubeTx(context);
-                drawCubeHelper();
+                draw3DHelper();
                 cubeTx.draw();
+                break;
+            }
+            case 3: {
+//                Particle particle = new Particle(context);
+//                draw3DHelper();
+//                particle.draw();
+                Cube cube = new Cube(0.3f);
+                draw3DHelper();
+                cube.draw(mMVPMatrix);
                 break;
             }
         }
         setBitmap();
     }//onDrawFrame
 
-    private void drawCubeHelper() {
+    private void draw3DHelper() {
         // Clear the color buffer  set above by glClearColor.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glClearColor(red, green, blue, 0.0f);
@@ -179,7 +190,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer
 
     public void changeDesign_id() {
         design_id++;
-        if (design_id > 2) {
+        if (design_id > 3) {
             design_id = 0;
         }
     }
